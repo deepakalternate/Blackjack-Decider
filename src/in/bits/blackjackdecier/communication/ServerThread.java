@@ -1,6 +1,6 @@
 package in.bits.blackjackdecier.communication;
 
-import in.bean.blackjackdecider.game.GameController;
+import in.bits.blackjackdecider.game.GameController;
 import in.bits.blackjackdecider.bean.Message;
 import in.bits.blackjackdecider.bean.Type;
 import java.io.IOException;
@@ -57,10 +57,10 @@ public class ServerThread extends Thread {
                         //get receiver from message and unicast it to that bastard
                 }
                 else if(message.getType().getTypeOfMessage().equalsIgnoreCase("HIT")) {
-                    server.sendToDealer(message);
+                    gameController.hit(message);
                 }
                 else if(message.getType().getTypeOfMessage().equalsIgnoreCase("FOLD")) {
-                        //Fold procedure
+                    gameController.fold(socket);
                 }
                 else if(message.getType().getTypeOfMessage().equalsIgnoreCase("FOREVAL")) {
                         //Send the hand value to the decider

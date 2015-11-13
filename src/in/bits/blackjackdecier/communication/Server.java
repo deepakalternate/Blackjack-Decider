@@ -1,6 +1,6 @@
 package in.bits.blackjackdecier.communication;
 
-import in.bean.blackjackdecider.game.GameController;
+import in.bits.blackjackdecider.game.GameController;
 import in.bits.blackjackdecider.bean.Message;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -13,9 +13,11 @@ import java.util.logging.Logger;
 
 public class Server implements ServerInterface{
     
+    //Handlers
     private ServerSocket serverSocket;
     private GameController gameController;
     
+    //Data storage
     private HashMap<Socket, ObjectOutputStream> clients;
     private HashMap<Socket, ObjectOutputStream> activePlayers;
     private HashMap<Socket, ObjectOutputStream> waitingPlayers;
@@ -24,6 +26,7 @@ public class Server implements ServerInterface{
     private HashMap<String, Socket> clientList;
     private HashMap<Socket, String> nameList;
     
+    //Flags and Counters
     private long lastJoin;
     private boolean gameStatus = false;
     private boolean dealerStatus = false;

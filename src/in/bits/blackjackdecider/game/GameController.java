@@ -1,5 +1,6 @@
-package in.bean.blackjackdecider.game;
+package in.bits.blackjackdecider.game;
 
+import in.bits.blackjackdecider.bean.Message;
 import in.bits.blackjackdecier.communication.Server;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -17,6 +18,13 @@ public class GameController {
         this.server = server;
     }
     
+    public void hit(Message message){
+        server.sendToDealer(message);
+    }
     
+    public void fold(Socket socket){
+        folded.put(socket, playing.get(socket));
+        playing.remove(socket);
+    }
     
 }
