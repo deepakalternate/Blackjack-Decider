@@ -1,5 +1,6 @@
 package in.bits.blackjackdecier.communication;
 
+import in.bean.blackjackdecider.game.GameController;
 import in.bits.blackjackdecider.bean.Message;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 public class Server implements ServerInterface{
     
     private ServerSocket serverSocket;
+    private GameController gameController;
     
     private HashMap<Socket, ObjectOutputStream> clients;
     private HashMap<Socket, ObjectOutputStream> activePlayers;
@@ -29,15 +31,19 @@ public class Server implements ServerInterface{
     private int currentlyWaiting = 0;
     private int count = 0;
     
-    //Constructor
+    //Constructor Start
     public Server(int port) throws IOException {
         clients = new HashMap<>();
         clientList = new HashMap<>();
+        gameController = new GameController(this);
 
         listen(port);
     }
-
+    //Constructor End
     
+//Communication Methods Start
+    
+    //Listen Start 
     @Override
     public void listen(int port) {
         try {
@@ -71,7 +77,7 @@ public class Server implements ServerInterface{
                         
                     }
                     
-                    new ServerThread(this, socket);
+                    new ServerThread(this, socket, gameController);
                 }
                 else {
                     //Send message to user that the room is full
@@ -83,21 +89,9 @@ public class Server implements ServerInterface{
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    @Override
-    public synchronized void broadcast(Message message) {
-        
-        //Adjust iteration to avoid broadcasting to Dealer
-        for (Map.Entry<Socket, ObjectOutputStream> entry : clients.entrySet()) {
-            try {
-                entry.getValue().writeObject(message);
-            } catch (IOException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-    }
-
+    //Listen End
+    
+    //Close Connection Start
     @Override
     public void closeConnection(Socket socket) {
         
@@ -126,7 +120,25 @@ public class Server implements ServerInterface{
         }
         
     }
+    //Close Connection End
+    
+    //Broadcast Start
+    @Override
+    public synchronized void broadcast(Message message) {
+        
+        //Adjust iteration to avoid broadcasting to Dealer
+        for (Map.Entry<Socket, ObjectOutputStream> entry : clients.entrySet()) {
+            try {
+                entry.getValue().writeObject(message);
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
+    //Broadcast End
 
+    //Unicast Start
     @Override
     public void unicast(Message message) {
         
@@ -137,7 +149,9 @@ public class Server implements ServerInterface{
         }
         
     }
+    //Unicast End
     
+    //Send To Dealer Start
     public void sendToDealer(Message message) {
         
         try {
@@ -147,28 +161,32 @@ public class Server implements ServerInterface{
         }
         
     }
+    //Send To Dealer End
 
-    /**
-     * @return the lastJoin
-     */
+    
+//Getters and Setters Start
+    
+    //Getter for lastJoin
     public long getLastJoin() {
         return lastJoin;
     }
 
-    /**
-     * @param lastJoin the lastJoin to set
-     */
+    //Setter for lastJoin
     public void setLastJoin(long lastJoin) {
         this.lastJoin = lastJoin;
     }
-
-    /**
-     * @param gameStatus the gameStatus to set
-     */
+    
+    //Getter for gameStatus
+    public boolean isGameStatus() {
+        return gameStatus;
+    }
+    
+    //Setter for gameStatus
     public void setGameStatus(boolean gameStatus) {
         this.gameStatus = gameStatus;
     }
     
+    //Setter for dealer
     public void setDealer(Socket socket) {
         currentlyActive -= 1;
         activePlayers.remove(socket);
@@ -177,47 +195,42 @@ public class Server implements ServerInterface{
         dealerStatus = true;
     }
 
-    /**
-     * @return the gameStatus
-     */
-    public boolean isGameStatus() {
-        return gameStatus;
-    }
-
-    /**
-     * @return the dealerStatus
-     */
+    //Getter for dealerStatus
     public boolean isDealerStatus() {
         return dealerStatus;
     }
 
-    /**
-     * @return the currentlyActive
-     */
+    //Getter for currentlyActive
     public int getCurrentlyActive() {
         return currentlyActive;
     }
 
-    /**
-     * @return the currentlyWaiting
-     */
+    //Getter for currentlyWaiting
     public int getCurrentlyWaiting() {
         return currentlyWaiting;
     }
     
+//Getters and Setters End
+    
+//Generic and Miscellaneous Start
+    
+    //Check if player is active or not
     public boolean isPlayerActive(Socket socket) {
         return activePlayers.containsKey(socket);
     }
     
+    //Check if the client is dealer or not
     public boolean isDealer(Socket socket) {
         return socket == dealer;
     }
     
+    //Add client to clientList
     public void addToList(String name, Socket socket){
         clientList.put(name, socket);
         nameList.put(socket, name);
     }
     
+    //Quit Game
     public void quitGame(String name, Socket socket) {
         
         clientList.remove(name);
@@ -234,20 +247,25 @@ public class Server implements ServerInterface{
         }
     }
     
+    //Get the name of the player
     public String getPlayerName(Socket socket){
         return nameList.get(socket);
     }
     
+    //Raise the counter variable count
     public void raiseCount(){
         count += 1;
     }
     
+    //Reset the counter variable count
     public void resetCount(){
         count = 0;
     }
     
+    //Get the counter variable count
     public int getCount(){
         return count;
     }
+//Generic and Miscellaneous End
     
 }

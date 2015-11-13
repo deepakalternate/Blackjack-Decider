@@ -1,5 +1,6 @@
 package in.bits.blackjackdecier.communication;
 
+import in.bean.blackjackdecider.game.GameController;
 import in.bits.blackjackdecider.bean.Message;
 import in.bits.blackjackdecider.bean.Type;
 import java.io.IOException;
@@ -12,11 +13,13 @@ public class ServerThread extends Thread {
     
     private Server server;
     private Socket socket;
+    private GameController gameController;
     
     //Constructor
-    public ServerThread(Server server, Socket socket) {
+    public ServerThread(Server server, Socket socket, GameController gameController) {
         this.server = server;
         this.socket = socket;
+        this.gameController = gameController;
         
         start();
     }
