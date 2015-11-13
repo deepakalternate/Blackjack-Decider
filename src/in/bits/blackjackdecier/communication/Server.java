@@ -13,13 +13,21 @@ import java.util.logging.Logger;
 public class Server implements ServerInterface{
     
     private ServerSocket serverSocket;
+    
     private HashMap<Socket, ObjectOutputStream> clients;
     private HashMap<Socket, ObjectOutputStream> activePlayers;
     private HashMap<Socket, ObjectOutputStream> waitingPlayers;
+    private Socket dealer;
+    private ObjectOutputStream dealerOutput;
     private HashMap<String, Socket> clientList;
+    private HashMap<Socket, String> nameList;
+    
     private long lastJoin;
-    private int gameStatus = 0;
-    //private ServerUpdateThread sut;
+    private boolean gameStatus = false;
+    private boolean dealerStatus = false;
+    private int currentlyActive = 0;
+    private int currentlyWaiting = 0;
+    private int count = 0;
     
     //Constructor
     public Server(int port) throws IOException {
@@ -36,26 +44,39 @@ public class Server implements ServerInterface{
             
             serverSocket = new ServerSocket(port);
             System.out.println("Listening on port :" + port);
-            //sut = new ServerUpdateThread(this);
+            
             
             while (true) {
+                
                 Socket socket = serverSocket.accept();
                 System.out.println("Connected to :" + socket);
+                
                 ObjectOutputStream buf = new ObjectOutputStream(socket.getOutputStream());
-                if(clients.size() <= 6){
-                    clients.put(socket, buf);
-                    setLastJoin(System.currentTimeMillis());
-                    if(getGameStatus() == 0) {
+                
+                if(currentlyActive + currentlyWaiting <= 5){
+                    
+                    clients.put(socket, buf);                 
+                    
+                    if(isGameStatus() == false) {
+                        
+                        setLastJoin(System.currentTimeMillis());
                         activePlayers.put(socket, buf);
+                        currentlyActive += 1;
+                        
                     }
                     else {
+                        
                         waitingPlayers.put(socket, buf);
+                        currentlyWaiting +=1;
+                        
                     }
+                    
+                    new ServerThread(this, socket);
                 }
                 else {
-                    
+                    //Send message to user that the room is full
+                    closeConnection(socket);
                 }
-                new ServerThread(this, socket);
             }
             
         } catch (IOException ex) {
@@ -116,6 +137,16 @@ public class Server implements ServerInterface{
         }
         
     }
+    
+    public void sendToDealer(Message message) {
+        
+        try {
+            dealerOutput.writeObject(message);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
 
     /**
      * @return the lastJoin
@@ -132,19 +163,91 @@ public class Server implements ServerInterface{
     }
 
     /**
+     * @param gameStatus the gameStatus to set
+     */
+    public void setGameStatus(boolean gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+    
+    public void setDealer(Socket socket) {
+        currentlyActive -= 1;
+        activePlayers.remove(socket);
+        dealer = socket;
+        dealerOutput = clients.get(socket);
+        dealerStatus = true;
+    }
+
+    /**
      * @return the gameStatus
      */
-    public int getGameStatus() {
+    public boolean isGameStatus() {
         return gameStatus;
     }
 
     /**
-     * @param gameStatus the gameStatus to set
+     * @return the dealerStatus
      */
-    public void setGameStatus(int gameStatus) {
-        this.gameStatus = gameStatus;
+    public boolean isDealerStatus() {
+        return dealerStatus;
+    }
+
+    /**
+     * @return the currentlyActive
+     */
+    public int getCurrentlyActive() {
+        return currentlyActive;
+    }
+
+    /**
+     * @return the currentlyWaiting
+     */
+    public int getCurrentlyWaiting() {
+        return currentlyWaiting;
     }
     
+    public boolean isPlayerActive(Socket socket) {
+        return activePlayers.containsKey(socket);
+    }
     
+    public boolean isDealer(Socket socket) {
+        return socket == dealer;
+    }
+    
+    public void addToList(String name, Socket socket){
+        clientList.put(name, socket);
+        nameList.put(socket, name);
+    }
+    
+    public void quitGame(String name, Socket socket) {
+        
+        clientList.remove(name);
+        clients.remove(socket);
+        nameList.remove(socket);
+        
+        if (activePlayers.containsKey(socket)) {
+            activePlayers.remove(socket);
+            currentlyActive -= 1;
+        }
+        else if (waitingPlayers.containsKey(socket)) {
+            waitingPlayers.remove(socket);
+            currentlyWaiting -= 1;
+        }
+    }
+    
+    public String getPlayerName(Socket socket){
+        return nameList.get(socket);
+    }
+    
+    public void raiseCount(){
+        count += 1;
+    }
+    
+    public void resetCount(){
+        count = 0;
+    }
+    
+    public int getCount(){
+        return count;
+    }
     
 }

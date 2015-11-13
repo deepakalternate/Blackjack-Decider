@@ -1,6 +1,7 @@
 package in.bits.blackjackdecier.communication;
 
 import in.bits.blackjackdecider.bean.Message;
+import in.bits.blackjackdecider.bean.Type;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -22,38 +23,46 @@ public class ServerThread extends Thread {
     
     public void run(){
         
-        /*
         try {
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             while (true) {
            
                 Message message = (Message)input.readObject();
-                //System.out.println("Message received --->"+message.getMessage()+"\n"+"From ---->"+message.getUser());
                 
-                if(message.getType().getTypeOfMessage().equalsIgnoreCase("CHAT")){
-                    
-                    System.out.println("Sending Message--->"+message.getMessage()+"\n"+"From ---->"+message.getUser());
-                    server.broadcast(message);
-                    
-                }else if(message.getType().getTypeOfMessage().equalsIgnoreCase("HELLO")){
-                    
-                    System.out.println("HELLO Message received --->"+message.getMessage()+"\n"+"From ---->"+message.getUser());
-                    if(server.getClientList().containsKey(message.getUser())){
+                synchronized(this){
+                    if(server.isDealer(socket) == false && server.isDealerStatus() == true && server.getCurrentlyActive() >= 2 && server.isGameStatus() == false && System.currentTimeMillis() >= server.getLastJoin() + 30000) {
                         
-                        server.unicast(new Message(Type.CONFLICT, null, "Username already in use.", null, message.getUser()));
-                    }else{
-                        server.getClientList().put(message.getUser(), socket);
-                        System.out.println(server.getClientList());
+                        server.setGameStatus(true);
+                        server.raiseCount();
+                        
+                        if(server.getCount() == 1) {
+                            server.broadcast(new Message(null, null, Type.GAMEBEGIN, null));
+                        }
                     }
-                } else if(message.getType().getTypeOfMessage().equalsIgnoreCase("UNICAST") || message.getType().getTypeOfMessage().equalsIgnoreCase("ACCEPT") || message.getType().getTypeOfMessage().equalsIgnoreCase("REJECT") || message.getType().getTypeOfMessage().equalsIgnoreCase("REQUEST") || message.getType().getTypeOfMessage().equalsIgnoreCase("DISCONNECT")){
-                    
-                    server.unicast(message);
-                    
-                } else if(message.getType().getTypeOfMessage().equalsIgnoreCase("LOGOUT")){
-                    
-                    server.closeConnection(socket);
                 }
-            
+                
+                if(message.getType().getTypeOfMessage().equalsIgnoreCase("ISDEALER")) {
+                    server.setDealer(socket);
+                } 
+                else if(message.getType().getTypeOfMessage().equalsIgnoreCase("JOIN")) {
+                    server.addToList(message.getSender(), socket);
+                }
+                else if(message.getType().getTypeOfMessage().equalsIgnoreCase("EXIT")){
+                    server.quitGame(message.getSender(), socket);
+                }
+                else if(message.getType().getTypeOfMessage().equalsIgnoreCase("CARD")){
+                        //get receiver from message and unicast it to that bastard
+                }
+                else if(message.getType().getTypeOfMessage().equalsIgnoreCase("HIT")) {
+                    server.sendToDealer(message);
+                }
+                else if(message.getType().getTypeOfMessage().equalsIgnoreCase("FOLD")) {
+                        //Fold procedure
+                }
+                else if(message.getType().getTypeOfMessage().equalsIgnoreCase("FOREVAL")) {
+                        //Send the hand value to the decider
+                }
+               
             }
 
         } catch (IOException ex) {
@@ -63,7 +72,5 @@ public class ServerThread extends Thread {
         }finally{
             server.closeConnection(socket);
         }
-    }
-    */
     }
 }

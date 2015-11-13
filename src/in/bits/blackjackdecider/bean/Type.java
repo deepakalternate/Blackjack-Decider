@@ -5,6 +5,7 @@ public enum Type {
     FOLD("FOLD"),
     CARD("CARD"),
     CARDREQ("CARDREQ"),
+    GAMEBEGIN("GAMEBEGIN"),
     ISDEALER("ISDEALER"),
     WAIT("WAIT"),
     READY("READY"),
