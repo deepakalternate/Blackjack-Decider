@@ -10,11 +10,13 @@ public class Message {
     private int score;
     private HashMap<String, String> result;
     
-    public Message(Card card, String sender, Type type, String receiver){
+    public Message(Card card, String sender, Type type, String receiver, int score, HashMap<String, String> result){
         this.card = card;
         this.sender = sender;
         this.type = type;
         this.receiver = receiver;
+        this.score = score;
+        this.result = result;
     }
 
     /**

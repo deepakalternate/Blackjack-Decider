@@ -37,9 +37,10 @@ public class ServerThread extends Thread {
                         
                         server.setGameStatus(true);
                         server.raiseCount();
+                        gameController.setNoOfPlayers(server.getCurrentlyActive());
                         
                         if(server.getCount() == 1) {
-                            server.broadcast(new Message(null, null, Type.GAMEBEGIN, null));
+                            server.broadcast(new Message(null, null, Type.GAMEBEGIN, null, 0, null));
                         }
                     }
                 }
