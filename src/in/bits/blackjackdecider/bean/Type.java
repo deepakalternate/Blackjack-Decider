@@ -9,6 +9,8 @@ public enum Type {
     ISDEALER("ISDEALER"),
     WAIT("WAIT"),
     READY("READY"),
+    ACCEPT("ACCEPT"),
+    REJECT("REJECT"),
     JOIN("JOIN"),
     DISCONNECT("DISCONNECT"),
     EXIT("EXIT"),

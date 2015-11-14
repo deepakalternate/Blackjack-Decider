@@ -69,7 +69,7 @@ public class Server implements ServerInterface{
                     if(isGameStatus() == false) {
                         
                         setLastJoin(System.currentTimeMillis());
-                        activePlayers.put(socket, buf);
+                        getActivePlayers().put(socket, buf);
                         currentlyActive += 1;
                         
                     }
@@ -129,8 +129,15 @@ public class Server implements ServerInterface{
     @Override
     public synchronized void broadcast(Message message) {
         
-        //Adjust iteration to avoid broadcasting to Dealer
-        for (Map.Entry<Socket, ObjectOutputStream> entry : clients.entrySet()) {
+        for (Map.Entry<Socket, ObjectOutputStream> entry : getActivePlayers().entrySet()) {
+            try {
+                entry.getValue().writeObject(message);
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        for (Map.Entry<Socket, ObjectOutputStream> entry : waitingPlayers.entrySet()) {
             try {
                 entry.getValue().writeObject(message);
             } catch (IOException ex) {
@@ -140,6 +147,21 @@ public class Server implements ServerInterface{
         
     }
     //Broadcast End
+    
+    //Broadcast Active Start
+    public synchronized void broadcastActive(Message message) {
+        
+        //Adjust iteration to avoid broadcasting to Dealer
+        for (Map.Entry<Socket, ObjectOutputStream> entry : getActivePlayers().entrySet()) {
+            try {
+                entry.getValue().writeObject(message);
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
+    //Broadcast Active End
 
     //Unicast Start
     @Override
@@ -213,6 +235,11 @@ public class Server implements ServerInterface{
         return currentlyWaiting;
     }
     
+    //Getter for activePlayers
+    public HashMap<Socket, ObjectOutputStream> getActivePlayers() {
+        return activePlayers;
+    }
+    
 //Getters and Setters End
     
 //Generic and Miscellaneous Start
@@ -269,6 +296,20 @@ public class Server implements ServerInterface{
     public int getCount(){
         return count;
     }
+    
+    public void resetGameCounters(){
+        count = 0;
+        gameStatus = false;
+        
+        for (Map.Entry<Socket, ObjectOutputStream> entry : activePlayers.entrySet()) {
+            waitingPlayers.put(entry.getKey(), entry.getValue());
+            activePlayers.remove(entry.getKey());
+            currentlyWaiting += 1;
+            currentlyActive -= 1;
+        }
+        
+    }
+    
 //Generic and Miscellaneous End
     
 }

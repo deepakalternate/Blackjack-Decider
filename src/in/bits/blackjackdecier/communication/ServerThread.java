@@ -55,7 +55,7 @@ public class ServerThread extends Thread {
                     server.quitGame(message.getSender(), socket);
                 }
                 else if(message.getType().getTypeOfMessage().equalsIgnoreCase("CARD")){
-                        //get receiver from message and unicast it to that bastard
+                    server.unicast(message);
                 }
                 else if(message.getType().getTypeOfMessage().equalsIgnoreCase("HIT")) {
                     gameController.hit(message);
@@ -64,7 +64,7 @@ public class ServerThread extends Thread {
                     gameController.fold(socket);
                 }
                 else if(message.getType().getTypeOfMessage().equalsIgnoreCase("FOREVAL")) {
-                        //Send the hand value to the decider
+                    gameController.forwardForEvaluation(message);
                 }
                
             }

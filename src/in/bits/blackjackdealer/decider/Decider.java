@@ -1,5 +1,7 @@
 package in.bits.blackjackdealer.decider;
 
+import in.bits.blackjackdecider.bean.Message;
+import in.bits.blackjackdecider.bean.Type;
 import in.bits.blackjackdecider.game.GameController;
 import in.bits.blackjackdecier.communication.Server;
 import java.util.HashMap;
@@ -15,13 +17,20 @@ public class Decider extends Thread {
     public Decider(GameController gameController, Server server){
         this.gameController = gameController;
         this.server = server;
+        
+        scores = new HashMap<>();
+        result = new HashMap<>();
+        
         start();
     }
     
     public void run(){
         while (true) {            
             if (gameController.isEveryoneDone()){
-                
+                server.broadcastActive(new Message(null, null, Type.RESULT, null, 0, declareWinner()));
+                resetGameController();
+                server.resetGameCounters();
+                server.broadcast(new Message(null, null, Type.READY, null, 0, null));
             }
         }
     }
@@ -47,6 +56,15 @@ public class Decider extends Thread {
         }
         
         return result;
+    }
+    
+    public void resetGameController(){
+        scores.clear();
+        result.clear();
+    }
+    
+    public void putInScore(Message message){
+        scores.put(message.getSender(), message.getScore());
     }
     
 }

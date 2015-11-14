@@ -13,7 +13,7 @@ public class GameController {
     HashMap<Socket, ObjectOutputStream> folded;
     Server server;
     Decider decider;
-    private int noOfPlayers;
+    private int noOfPlayers = 0;
     
     public GameController(Server server){
         playing = new HashMap<>();
@@ -29,6 +29,11 @@ public class GameController {
     public void fold(Socket socket){
         folded.put(socket, playing.get(socket));
         playing.remove(socket);
+        noOfPlayers -= 1;
+    }
+    
+    public void forwardForEvaluation(Message message){
+        decider.putInScore(message);
     }
 
     /**
@@ -47,6 +52,11 @@ public class GameController {
     
     public boolean isEveryoneDone(){
         return folded.size() == noOfPlayers;
+    }
+    
+    public void setPlaying(){
+        playing = server.getActivePlayers();
+        noOfPlayers = playing.size();
     }
     
 }
