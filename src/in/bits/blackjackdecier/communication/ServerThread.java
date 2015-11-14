@@ -37,7 +37,7 @@ public class ServerThread extends Thread {
                         
                         server.setGameStatus(true);
                         server.raiseCount();
-                        gameController.setNoOfPlayers(server.getCurrentlyActive());
+                        gameController.setPlaying();
                         
                         if(server.getCount() == 1) {
                             server.broadcast(new Message(null, null, Type.GAMEBEGIN, null, 0, null));
@@ -66,7 +66,17 @@ public class ServerThread extends Thread {
                 else if(message.getType().getTypeOfMessage().equalsIgnoreCase("FOREVAL")) {
                     gameController.forwardForEvaluation(message);
                 }
-               
+                else if(message.getType().getTypeOfMessage().equalsIgnoreCase("ACCEPT")) {
+                    if(server.isGameStatus() == false) {
+                        server.addToActive(socket);
+                    }
+                    else {
+                        server.unicast(new Message(null, null, Type.WAIT, message.getSender(), 0, null));
+                    }
+                }
+                else if(message.getType().getTypeOfMessage().equalsIgnoreCase("REJECT")) {
+                    server.quitGame(message.getSender(), socket);
+                }
             }
 
         } catch (IOException ex) {

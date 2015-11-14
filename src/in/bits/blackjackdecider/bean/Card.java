@@ -1,38 +1,73 @@
 package in.bits.blackjackdecider.bean;
 
 import java.io.Serializable;
+import java.util.Objects;
+import java.util.Random;
 
 public class Card implements Serializable {
     
-    private String suit;
-    private int displayValue;
-    private int scoreValue;
+    Random randomizer;
     
-    public Card(String suit, int displayValue, int scoreValue) {
-        this.suit = suit;
-        this.displayValue = displayValue;
-        this.scoreValue = scoreValue;
-    }
+    private final Suit suit;
+    private final int cardNumber;
+    private final int value;
 
+    public Card(Suit suit, int cardNumber, int value) {
+        this.suit = suit;
+        this.cardNumber = cardNumber;
+        this.value = value;
+    }
+    
     /**
      * @return the suit
      */
-    public String getSuit() {
+    public Suit getSuit() {
         return suit;
     }
 
     /**
-     * @return the displayValue
+     * @return the value
      */
-    public int getDisplayValue() {
-        return displayValue;
+    public int getValue() {
+        return value;
+    }
+    /**
+     * @return the cardNumber
+     */
+    public int getCardNumber() {
+        return cardNumber;
     }
 
-    /**
-     * @return the scoreValue
-     */
-    public int getScoreValue() {
-        return scoreValue;
+    @Override
+    public String toString() {
+        return "Card{" + "suit=" + suit + ", cardNumber=" + cardNumber + ", value=" + value + "}\n";
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.suit);
+        hash = 89 * hash + this.cardNumber;
+        hash = 89 * hash + this.value;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Card other = (Card) obj;
+        if (this.suit != other.suit) {
+            return false;
+        }
+        if (this.cardNumber != other.cardNumber) {
+            return false;
+        }
+        return true;
     }
     
     

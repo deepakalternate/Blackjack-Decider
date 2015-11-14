@@ -101,16 +101,6 @@ public class Server implements ServerInterface{
         try {
             clients.get(socket).close();
             clients.remove(socket);
-            String name = "";
-            for (Map.Entry<String, Socket> entry : clientList.entrySet()) {
-                if (entry.getValue().equals(socket)) {
-                    name = entry.getKey();
-                    break;
-                }
-            }
-
-            clientList.remove(name);
-
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -264,7 +254,7 @@ public class Server implements ServerInterface{
     public void quitGame(String name, Socket socket) {
         
         clientList.remove(name);
-        clients.remove(socket);
+        //clients.remove(socket);
         nameList.remove(socket);
         
         if (activePlayers.containsKey(socket)) {
@@ -275,6 +265,17 @@ public class Server implements ServerInterface{
             waitingPlayers.remove(socket);
             currentlyWaiting -= 1;
         }
+        
+        closeConnection(socket);
+    }
+    
+    //Add to active list
+    public void addToActive(Socket socket){
+        activePlayers.put(socket, waitingPlayers.get(socket));
+        waitingPlayers.remove(socket);
+        currentlyActive += 1;
+        currentlyWaiting -= 1;
+        setLastJoin(System.currentTimeMillis());
     }
     
     //Get the name of the player
@@ -297,6 +298,7 @@ public class Server implements ServerInterface{
         return count;
     }
     
+    //Reset game counters to replay game
     public void resetGameCounters(){
         count = 0;
         gameStatus = false;
