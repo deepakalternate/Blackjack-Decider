@@ -1,6 +1,7 @@
 package in.bits.blackjackdealer.decider;
 
 import in.bits.blackjackdecider.bean.Message;
+import in.bits.blackjackdecider.bean.Result;
 import in.bits.blackjackdecider.bean.Type;
 import in.bits.blackjackdecider.game.GameController;
 import in.bits.blackjackdecier.communication.Server;
@@ -12,7 +13,7 @@ public class Decider extends Thread {
     GameController gameController;
     Server server;
     HashMap<String, Integer> scores;
-    HashMap<String, String> result;
+    HashMap<String, Result> result;
     
     public Decider(GameController gameController, Server server){
         this.gameController = gameController;
@@ -45,13 +46,13 @@ public class Decider extends Thread {
         
         for (Map.Entry<String, Integer> entry : scores.entrySet()) {
             if(entry.getValue() > 21){
-                result.put(entry.getKey(), "BUST");
+                result.put(entry.getKey(), new Result(entry.getValue(), "BUST"));
             }
             else if (max == entry.getValue()) {
-                result.put(entry.getKey(), "WINNER");
+                result.put(entry.getKey(), new Result(entry.getValue(), "WINNER"));
             }
             else {
-                result.put(entry.getKey(), "LOSER");
+                result.put(entry.getKey(), new Result(entry.getValue(), "LOSER"));
             }
         }
         
