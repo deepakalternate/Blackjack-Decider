@@ -27,7 +27,7 @@ public class Decider extends Thread {
     
     public void run(){
         while (true) {            
-            if (gameController.isEveryoneDone()){
+            if (gameController.getNoOfPlayers() != 0 && gameController.isEveryoneDone()){
                 server.broadcastActive(new Message(null, null, Type.RESULT, null, 0, declareWinner()));
                 resetGameController();
                 server.resetGameCounters();

@@ -29,7 +29,7 @@ public class GameController {
     public void fold(Socket socket){
         folded.put(socket, playing.get(socket));
         playing.remove(socket);
-        noOfPlayers -= 1;
+        //noOfPlayers -= 1;
     }
     
     public void forwardForEvaluation(Message message){
