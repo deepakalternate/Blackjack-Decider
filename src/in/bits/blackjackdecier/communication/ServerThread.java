@@ -37,9 +37,10 @@ public class ServerThread extends Thread {
                         
                         server.setGameStatus(true);
                         server.raiseCount();
-                        gameController.setPlaying();
+                        
                         
                         if(server.getCount() == 1) {
+                            gameController.setPlaying();
                             server.broadcast(new Message(null, null, Type.GAMEBEGIN, null, 0, null));
                         }
                     }
@@ -80,9 +81,9 @@ public class ServerThread extends Thread {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             server.closeConnection(socket);
         }

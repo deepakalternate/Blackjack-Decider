@@ -38,6 +38,9 @@ public class Server implements ServerInterface{
     public Server(int port) throws IOException {
         clients = new HashMap<>();
         clientList = new HashMap<>();
+        activePlayers = new HashMap<>();
+        waitingPlayers = new HashMap<>();
+        nameList = new HashMap<>();
         gameController = new GameController(this);
 
         listen(port);
