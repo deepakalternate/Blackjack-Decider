@@ -25,13 +25,13 @@ public class ServerThread extends Thread {
     }
     
     public void run(){
-        
+        System.out.println("Thread is running");
         try {
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             while (true) {
            
                 Message message = (Message)input.readObject();
-                
+                System.out.println(message);
                 System.out.println("Current: "+System.currentTimeMillis()+" || Last Join: "+server.getLastJoin());
                 
                 synchronized(this){
@@ -83,9 +83,9 @@ public class ServerThread extends Thread {
             }
 
         } catch (IOException ex) {
-            //Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            //Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             server.closeConnection(socket);
         }

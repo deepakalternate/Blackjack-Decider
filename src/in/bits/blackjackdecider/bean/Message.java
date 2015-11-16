@@ -20,6 +20,11 @@ public class Message implements Serializable{
         this.result = result;
     }
 
+    @Override
+    public String toString() {
+        return "Message{" + "card=" + card + ", sender=" + sender + ", type=" + type + ", receiver=" + receiver + ", score=" + score + ", result=" + result + '}';
+    }
+    
     /**
      * @return the card
      */
