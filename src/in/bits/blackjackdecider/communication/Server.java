@@ -325,6 +325,8 @@ public class Server implements ServerInterface{
             currentlyActive -= 1;
         }
         
+        broadcast(new Message(null, null, Type.RESTART, null, 0, null));
+        
     }
     
     public void sendPlayerList(){
