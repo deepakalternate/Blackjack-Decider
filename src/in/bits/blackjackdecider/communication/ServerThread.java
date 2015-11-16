@@ -34,6 +34,11 @@ public class ServerThread extends Thread {
                 message = (Message)input.readObject();
                 System.out.println(message);
                 System.out.println("Current: "+System.currentTimeMillis()+" || Last Join: "+server.getLastJoin());
+                System.out.println(server.isDealer(socket) == false);
+                System.out.println(server.isDealerStatus() == true);
+                System.out.println(server.getCurrentlyActive());
+                System.out.println(server.getCurrentlyActive() >- 2);
+                System.out.println(server.isGameStatus() == false);
                 
                 synchronized(this){
                     if(server.isDealer(socket) == false && server.isDealerStatus() == true && server.getCurrentlyActive() >= 2 && server.isGameStatus() == false && System.currentTimeMillis() >= server.getLastJoin() + 30000) {
