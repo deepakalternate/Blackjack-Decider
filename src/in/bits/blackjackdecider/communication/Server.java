@@ -3,6 +3,7 @@ package in.bits.blackjackdecider.communication;
 import in.bits.blackjackdecider.game.GameController;
 import in.bits.blackjack.bean.Message;
 import in.bits.blackjack.bean.Type;
+import in.bits.blackjackdecider.decider.Decider;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -18,6 +19,7 @@ public class Server implements ServerInterface{
     private ServerSocket serverSocket;
     private GameController gameController;
     private Timer timer;
+    private Decider decider;
     
     //Data storage
     private HashMap<Socket, ObjectOutputStream> clients;
@@ -45,6 +47,7 @@ public class Server implements ServerInterface{
         nameList = new HashMap<>();
         gameController = new GameController(this);
         timer = new Timer(this, gameController);
+        decider = new Decider(gameController, this);
 
         listen(port);
     }
