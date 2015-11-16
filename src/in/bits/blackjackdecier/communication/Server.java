@@ -65,25 +65,30 @@ public class Server implements ServerInterface{
                 
                 ObjectOutputStream buf = new ObjectOutputStream(socket.getOutputStream());
                 
+                clients.put(socket, buf);
+                
                 if(currentlyActive + currentlyWaiting <= 5){
-                    
-                    clients.put(socket, buf);                 
+                                     
                     
                     if(isGameStatus() == false) {
                         
                         setLastJoin(System.currentTimeMillis());
                         getActivePlayers().put(socket, buf);
                         currentlyActive += 1;
+                        System.out.println("Inside active set");
                         
                     }
                     else {
                         
                         waitingPlayers.put(socket, buf);
                         currentlyWaiting +=1;
+                        System.out.println("Inside waiting set");
                         
                     }
                     
+                    System.out.println("Just before launching thread.");
                     new ServerThread(this, socket, gameController);
+                    System.out.println("Just after launching thread");
                 }
                 else {
                     //Send message to user that the room is full
