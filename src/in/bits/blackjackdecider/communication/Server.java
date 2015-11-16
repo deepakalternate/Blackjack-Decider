@@ -284,7 +284,7 @@ public class Server implements ServerInterface{
     }
     
     //Add to active list
-    public void addToActive(Socket socket){
+    public synchronized void addToActive(Socket socket){
         activePlayers.put(socket, waitingPlayers.get(socket));
         waitingPlayers.remove(socket);
         currentlyActive += 1;
