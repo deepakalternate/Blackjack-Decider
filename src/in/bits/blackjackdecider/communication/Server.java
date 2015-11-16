@@ -158,16 +158,21 @@ public class Server implements ServerInterface{
     //Broadcast Active Start
     public synchronized void broadcastActive(Message message, int val) {
         
+        System.out.println("Iterating the message");
+        System.out.println(activePlayers);
         //Adjust iteration to avoid broadcasting to Dealer
         for (Map.Entry<Socket, ObjectOutputStream> entry : getActivePlayers().entrySet()) {
             try {
+                System.out.println("inside iterator");
                 entry.getValue().writeObject(message);
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println("Broadcast finished" + val);
         
         if (val == 1) {
+            System.out.println("Inside val = 1");
             gameController.resetGameController();
             resetGameCounters();
             broadcast(new Message(null, null, Type.RESTART, null, 0, null));
@@ -350,7 +355,7 @@ public class Server implements ServerInterface{
     public void resetGameCounters(){
         count = 0;
         gameStatus = false;
-        timer.setRunTimer(true);
+        timer.run();
         
         for (Map.Entry<Socket, ObjectOutputStream> entry : activePlayers.entrySet()) {
             waitingPlayers.put(entry.getKey(), entry.getValue());
@@ -376,6 +381,7 @@ public class Server implements ServerInterface{
     }
     
     public void sendResult(HashMap<String, Result> result){
+        System.out.println("Inside send result");
         broadcastActive(new Message(null, null, Type.RESULT, null, 0, result), 1);
         
     }

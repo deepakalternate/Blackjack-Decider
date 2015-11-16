@@ -42,7 +42,7 @@ public class Decider extends Thread {
             
             if (gameController.getNoOfPlayers() > 0 && scores.size() == gameController.getNoOfPlayers()){
                 System.out.println("Inside if");
-                
+                System.out.println(server.getActivePlayers());
                 declareWinner();
                 server.sendResult(result);
                 
