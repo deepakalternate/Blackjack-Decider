@@ -190,6 +190,25 @@ public class Server implements ServerInterface{
         
     }
     //Send To Dealer End
+    
+    public void closeDealer() {
+        try {
+            dealerOutput.close();
+            dealerOutput = null;
+            clients.remove(dealer);
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dealer.close();
+                dealer = null;
+                dealerStatus = false;
+
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
     
 //Getters and Setters Start
@@ -267,20 +286,25 @@ public class Server implements ServerInterface{
     //Quit Game
     public void quitGame(String name, Socket socket) {
         
-        clientList.remove(name);
-        //clients.remove(socket);
-        nameList.remove(socket);
-        
-        if (activePlayers.containsKey(socket)) {
-            activePlayers.remove(socket);
-            currentlyActive -= 1;
+        if(socket == dealer){
+            closeDealer();
         }
-        else if (waitingPlayers.containsKey(socket)) {
-            waitingPlayers.remove(socket);
-            currentlyWaiting -= 1;
+        else{
+            clientList.remove(name);
+            //clients.remove(socket);
+            nameList.remove(socket);
+
+            if (activePlayers.containsKey(socket)) {
+                activePlayers.remove(socket);
+                currentlyActive -= 1;
+            }
+            else if (waitingPlayers.containsKey(socket)) {
+                waitingPlayers.remove(socket);
+                currentlyWaiting -= 1;
+            }
+
+            closeConnection(socket);
         }
-        
-        closeConnection(socket);
     }
     
     //Add to active list
