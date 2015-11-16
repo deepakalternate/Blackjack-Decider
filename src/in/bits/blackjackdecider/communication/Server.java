@@ -359,10 +359,11 @@ public class Server implements ServerInterface{
         
         for (Map.Entry<Socket, ObjectOutputStream> entry : activePlayers.entrySet()) {
             waitingPlayers.put(entry.getKey(), entry.getValue());
-            activePlayers.remove(entry.getKey());
+            //activePlayers.remove(entry.getKey());
             currentlyWaiting += 1;
             currentlyActive -= 1;
         }
+        activePlayers.clear();
         
         broadcast(new Message(null, null, Type.RESTART, null, 0, null));
         
