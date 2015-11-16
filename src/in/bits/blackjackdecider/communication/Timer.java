@@ -30,6 +30,7 @@ public class Timer extends Thread{
                 server.setGameStatus(true);
                 gameController.setPlaying();
                 server.broadcast(new Message(null, null, Type.GAMEBEGIN, null, 0, null));
+                server.sendPlayerList();
                 runTimer = false;
             }
         }

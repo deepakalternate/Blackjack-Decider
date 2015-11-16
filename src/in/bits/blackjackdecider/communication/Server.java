@@ -2,6 +2,7 @@ package in.bits.blackjackdecider.communication;
 
 import in.bits.blackjackdecider.game.GameController;
 import in.bits.blackjack.bean.Message;
+import in.bits.blackjack.bean.Type;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -179,7 +180,7 @@ public class Server implements ServerInterface{
     //Unicast End
     
     //Send To Dealer Start
-    public void sendToDealer(Message message) {
+    public synchronized void sendToDealer(Message message) {
         
         try {
             dealerOutput.writeObject(message);
@@ -324,6 +325,18 @@ public class Server implements ServerInterface{
             currentlyActive -= 1;
         }
         
+    }
+    
+    public void sendPlayerList(){
+        String list = "";
+
+        for (Map.Entry<String, Socket> entry : clientList.entrySet()) {
+            if (activePlayers.containsKey(entry.getValue())){
+                list += entry.getKey() + ",";
+            }
+        }
+        System.out.println("Sending List-->" + list);
+        broadcastActive(new Message(null, list, Type.LIST, null, count, null));
     }
     
 //Generic and Miscellaneous End
