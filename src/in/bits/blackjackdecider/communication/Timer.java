@@ -29,7 +29,7 @@ public class Timer extends Thread{
             if(server.isDealerStatus() == true && server.getCurrentlyActive() >= 2 && server.isGameStatus() == false && System.currentTimeMillis() >= server.getLastJoin() + 30000){
                 server.setGameStatus(true);
                 gameController.setPlaying();
-                server.broadcast(new Message(null, null, Type.GAMEBEGIN, null, 0, null));
+                server.broadcastActive(new Message(null, null, Type.GAMEBEGIN, null, 0, null), 0);
                 server.sendPlayerList();
                 runTimer = false;
             }

@@ -58,4 +58,9 @@ public class GameController {
         noOfPlayers = playing.size();
     }
     
+    public void resetGameController(){
+        playing.clear();
+        folded.clear();
+    }
+    
 }

@@ -2,6 +2,7 @@ package in.bits.blackjackdecider.communication;
 
 import in.bits.blackjackdecider.game.GameController;
 import in.bits.blackjack.bean.Message;
+import in.bits.blackjack.bean.Result;
 import in.bits.blackjack.bean.Type;
 import in.bits.blackjackdecider.decider.Decider;
 import java.io.IOException;
@@ -155,7 +156,7 @@ public class Server implements ServerInterface{
     //Broadcast End
     
     //Broadcast Active Start
-    public synchronized void broadcastActive(Message message) {
+    public synchronized void broadcastActive(Message message, int val) {
         
         //Adjust iteration to avoid broadcasting to Dealer
         for (Map.Entry<Socket, ObjectOutputStream> entry : getActivePlayers().entrySet()) {
@@ -164,6 +165,12 @@ public class Server implements ServerInterface{
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        
+        if (val == 1) {
+            gameController.resetGameController();
+            resetGameCounters();
+            broadcast(new Message(null, null, Type.RESTART, null, 0, null));
         }
         
     }
@@ -365,7 +372,12 @@ public class Server implements ServerInterface{
             }
         }
         System.out.println("Sending List-->" + list);
-        broadcastActive(new Message(null, list, Type.LIST, null, count, null));
+        broadcastActive(new Message(null, list, Type.LIST, null, count, null), 0);
+    }
+    
+    public void sendResult(HashMap<String, Result> result){
+        broadcastActive(new Message(null, null, Type.RESULT, null, 0, result), 1);
+        
     }
     
 //Generic and Miscellaneous End

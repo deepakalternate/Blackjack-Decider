@@ -7,6 +7,8 @@ import in.bits.blackjackdecider.game.GameController;
 import in.bits.blackjackdecider.communication.Server;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Decider extends Thread {
     
@@ -26,17 +28,31 @@ public class Decider extends Thread {
     }
     
     public void run(){
-        while (true) {            
-            if (gameController.getNoOfPlayers() != 0 && gameController.isEveryoneDone()){
-                server.broadcastActive(new Message(null, null, Type.RESULT, null, 0, declareWinner()));
-                resetGameController();
-                server.resetGameCounters();
-                server.broadcast(new Message(null, null, Type.READY, null, 0, null));
+        while (true) {
+            
+            try {
+                sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Decider.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            System.out.println("I'm here, number of players: "+gameController.getNoOfPlayers()+". Is everyone done? " + gameController.isEveryoneDone());
+            
+            System.out.println(scores);
+            
+            if (gameController.getNoOfPlayers() > 0 && scores.size() == gameController.getNoOfPlayers()){
+                System.out.println("Inside if");
+                
+                declareWinner();
+                server.sendResult(result);
+                
+                resetScoreboard();
+                
             }
         }
     }
     
-    public HashMap declareWinner(){
+    public void declareWinner(){
         int max = 0;
         for (Map.Entry<String, Integer> entry : scores.entrySet()) {
             if(entry.getValue() <= 21 && max < entry.getValue()){
@@ -55,17 +71,19 @@ public class Decider extends Thread {
                 result.put(entry.getKey(), new Result(entry.getValue(), "LOSER"));
             }
         }
-        
-        return result;
     }
     
-    public void resetGameController(){
+    public void resetScoreboard(){
         scores.clear();
         result.clear();
     }
     
     public void putInScore(Message message){
         scores.put(message.getSender(), message.getScore());
+    }
+    
+    public HashMap<String, Result> getResult(){
+        return result;
     }
     
 }
