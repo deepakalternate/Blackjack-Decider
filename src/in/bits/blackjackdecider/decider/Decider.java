@@ -1,10 +1,10 @@
-package in.bits.blackjackdealer.decider;
+package in.bits.blackjackdecider.decider;
 
-import in.bits.blackjackdecider.bean.Message;
-import in.bits.blackjackdecider.bean.Result;
-import in.bits.blackjackdecider.bean.Type;
+import in.bits.blackjack.bean.Message;
+import in.bits.blackjack.bean.Result;
+import in.bits.blackjack.bean.Type;
 import in.bits.blackjackdecider.game.GameController;
-import in.bits.blackjackdecier.communication.Server;
+import in.bits.blackjackdecider.communication.Server;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,6 +1,6 @@
-package in.bits.blackjackdecier.communication;
+package in.bits.blackjackdecider.communication;
 
-import in.bits.blackjackdecider.bean.Message;
+import in.bits.blackjack.bean.Message;
 import java.net.Socket;
 
 public interface ServerInterface {

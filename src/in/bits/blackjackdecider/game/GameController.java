@@ -1,8 +1,8 @@
 package in.bits.blackjackdecider.game;
 
-import in.bits.blackjackdealer.decider.Decider;
-import in.bits.blackjackdecider.bean.Message;
-import in.bits.blackjackdecier.communication.Server;
+import in.bits.blackjackdecider.decider.Decider;
+import in.bits.blackjack.bean.Message;
+import in.bits.blackjackdecider.communication.Server;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;

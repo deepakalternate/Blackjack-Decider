@@ -1,7 +1,7 @@
-package in.bits.blackjackdecier.communication;
+package in.bits.blackjackdecider.communication;
 
 import in.bits.blackjackdecider.game.GameController;
-import in.bits.blackjackdecider.bean.Message;
+import in.bits.blackjack.bean.Message;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;

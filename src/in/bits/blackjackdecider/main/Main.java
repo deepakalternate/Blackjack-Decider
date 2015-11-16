@@ -5,7 +5,7 @@
  */
 package in.bits.blackjackdecider.main;
 
-import in.bits.blackjackdecier.communication.Server;
+import in.bits.blackjackdecider.communication.Server;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

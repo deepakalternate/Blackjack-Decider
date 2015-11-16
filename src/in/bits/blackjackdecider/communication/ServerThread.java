@@ -1,8 +1,8 @@
-package in.bits.blackjackdecier.communication;
+package in.bits.blackjackdecider.communication;
 
 import in.bits.blackjackdecider.game.GameController;
-import in.bits.blackjackdecider.bean.Message;
-import in.bits.blackjackdecider.bean.Type;
+import in.bits.blackjack.bean.Message;
+import in.bits.blackjack.bean.Type;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -26,11 +26,12 @@ public class ServerThread extends Thread {
     
     public void run(){
         System.out.println("Thread is running");
+        Message message;
         try {
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             while (true) {
            
-                Message message = (Message)input.readObject();
+                message = (Message)input.readObject();
                 System.out.println(message);
                 System.out.println("Current: "+System.currentTimeMillis()+" || Last Join: "+server.getLastJoin());
                 

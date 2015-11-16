@@ -1,9 +1,12 @@
-package in.bits.blackjackdecider.bean;
+package in.bits.blackjack.bean;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class Message implements Serializable{
+    
+    public static final long serialVersionUID = 42L;
+    
     private Card card;
     private String sender;
     private Type type;
@@ -25,6 +28,8 @@ public class Message implements Serializable{
         return "Message{" + "card=" + card + ", sender=" + sender + ", type=" + type + ", receiver=" + receiver + ", score=" + score + ", result=" + result + '}';
     }
     
+    
+
     /**
      * @return the card
      */
