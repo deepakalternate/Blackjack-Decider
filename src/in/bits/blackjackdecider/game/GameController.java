@@ -9,10 +9,10 @@ import java.util.HashMap;
 
 public class GameController {
     
-    HashMap<Socket, ObjectOutputStream> playing;
-    HashMap<Socket, ObjectOutputStream> folded;
-    Server server;
-    Decider decider;
+    private HashMap<Socket, ObjectOutputStream> playing;
+    private HashMap<Socket, ObjectOutputStream> folded;
+    private Server server;
+    private Decider decider;
     private int noOfPlayers = 0;
     
     public GameController(Server server){
@@ -29,7 +29,6 @@ public class GameController {
     public void fold(Socket socket){
         folded.put(socket, playing.get(socket));
         playing.remove(socket);
-        //noOfPlayers -= 1;
     }
     
     public void forwardForEvaluation(Message message){

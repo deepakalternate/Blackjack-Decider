@@ -1,0 +1,38 @@
+package in.bits.blackjackdecider.communication;
+
+import in.bits.blackjack.bean.Message;
+import in.bits.blackjack.bean.Type;
+import in.bits.blackjackdecider.game.GameController;
+
+public class Timer extends Thread{
+    
+    private Server server;
+    private GameController gameController;
+    private boolean runTimer = true;
+    
+    public Timer (Server server, GameController gameController) {
+        this.server = server;
+        this.gameController = gameController;
+        start();
+    }
+
+    public void run() {
+        while (runTimer) {
+            System.out.println("Tick");
+            if(server.isDealerStatus() == true && server.getCurrentlyActive() >= 2 && server.isGameStatus() == false && System.currentTimeMillis() >= server.getLastJoin() + 30000){
+                server.setGameStatus(true);
+                gameController.setPlaying();
+                server.broadcast(new Message(null, null, Type.GAMEBEGIN, null, 0, null));
+                runTimer = false;
+            }
+        }
+    }
+
+    public void setRunTimer(boolean runTimer) {
+        this.runTimer = runTimer;
+    }
+    
+    
+    
+    
+}

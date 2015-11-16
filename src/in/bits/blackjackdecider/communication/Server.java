@@ -16,6 +16,7 @@ public class Server implements ServerInterface{
     //Handlers
     private ServerSocket serverSocket;
     private GameController gameController;
+    private Timer timer;
     
     //Data storage
     private HashMap<Socket, ObjectOutputStream> clients;
@@ -42,6 +43,7 @@ public class Server implements ServerInterface{
         waitingPlayers = new HashMap<>();
         nameList = new HashMap<>();
         gameController = new GameController(this);
+        timer = new Timer(this, gameController);
 
         listen(port);
     }
@@ -313,6 +315,7 @@ public class Server implements ServerInterface{
     public void resetGameCounters(){
         count = 0;
         gameStatus = false;
+        timer.setRunTimer(true);
         
         for (Map.Entry<Socket, ObjectOutputStream> entry : activePlayers.entrySet()) {
             waitingPlayers.put(entry.getKey(), entry.getValue());
