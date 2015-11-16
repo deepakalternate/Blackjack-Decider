@@ -54,7 +54,7 @@ public class GameController {
     }
     
     public void setPlaying(){
-        playing = server.getActivePlayers();
+        playing = new HashMap<>(server.getActivePlayers());
         noOfPlayers = playing.size();
     }
     
