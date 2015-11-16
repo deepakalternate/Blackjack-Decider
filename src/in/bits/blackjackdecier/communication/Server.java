@@ -125,6 +125,7 @@ public class Server implements ServerInterface{
         for (Map.Entry<Socket, ObjectOutputStream> entry : getActivePlayers().entrySet()) {
             try {
                 entry.getValue().writeObject(message);
+                System.out.println(message.getType());
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -133,6 +134,7 @@ public class Server implements ServerInterface{
         for (Map.Entry<Socket, ObjectOutputStream> entry : waitingPlayers.entrySet()) {
             try {
                 entry.getValue().writeObject(message);
+                System.out.println(message.getType());
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -206,6 +208,7 @@ public class Server implements ServerInterface{
     
     //Setter for dealer
     public void setDealer(Socket socket) {
+        System.out.println("Did trigger this.");
         currentlyActive -= 1;
         activePlayers.remove(socket);
         dealer = socket;
