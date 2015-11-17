@@ -20,7 +20,7 @@ public class Timer extends Thread{
 
     public void run() {
         while (runTimer) {
-            System.out.println("Tick");
+            //System.out.println("Tick");
             try {
                 sleep(1000);
             } catch (InterruptedException ex) {

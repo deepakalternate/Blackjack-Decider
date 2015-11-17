@@ -36,18 +36,12 @@ public class Decider extends Thread {
                 Logger.getLogger(Decider.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            System.out.println("I'm here, number of players: "+gameController.getNoOfPlayers()+". Is everyone done? " + gameController.isEveryoneDone());
-            
-            System.out.println(scores);
+            //System.out.println(scores);
             
             if (gameController.getNoOfPlayers() > 0 && scores.size() == gameController.getNoOfPlayers()){
-                System.out.println("Inside if");
                 System.out.println(server.getActivePlayers());
                 declareWinner();
-                server.sendResult(result);
-                
-                resetScoreboard();
-                
+                server.sendResult();
             }
         }
     }
