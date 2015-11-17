@@ -165,7 +165,7 @@ public class Server implements ServerInterface{
             gameController.resetGameController();
             decider.resetScoreboard();
             resetGameCounters();
-            //broadcast(new Message(null, null, Type.RESTART, null, 0, null));
+            broadcast(new Message(null, null, Type.RESTART, null, 0, null));
         }
         
     }
@@ -372,9 +372,9 @@ public class Server implements ServerInterface{
         broadcastActive(new Message(null, list, Type.LIST, null, count, null), 0);
     }
     
-    public void sendResult(HashMap<String, Result> result){
+    public void sendResult(){
         sendToDealer(new Message(null, null, Type.RESTART, null, 0, null));
-        broadcastActive(new Message(null, null, Type.RESULT, null, 0, result), 1);
+        broadcastActive(new Message(null, null, Type.RESULT, null, 0, decider.getResult()), 1);
     }
     
 //Generic and Miscellaneous End
