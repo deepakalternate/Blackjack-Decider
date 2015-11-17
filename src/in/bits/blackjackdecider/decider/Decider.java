@@ -31,8 +31,6 @@ public class Decider extends Thread {
     public void run(){
         while (ticker) {
             
-            System.out.println("Alive");
-            
             try {
                 sleep(1000);
             } catch (InterruptedException ex) {
