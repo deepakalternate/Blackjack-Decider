@@ -384,6 +384,7 @@ public class Server implements ServerInterface{
     
     public void sendResult(HashMap<String, Result> result){
         System.out.println("Inside send result");
+        sendToDealer(new Message(null, null, Type.RESTART, null, 0, null));
         broadcastActive(new Message(null, null, Type.RESULT, null, 0, result), 1);
         
     }
