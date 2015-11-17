@@ -355,7 +355,8 @@ public class Server implements ServerInterface{
     public void resetGameCounters(){
         count = 0;
         gameStatus = false;
-        timer.run();
+        Timer tock = new Timer(this, gameController);
+        lastJoin = System.currentTimeMillis();
         
         for (Map.Entry<Socket, ObjectOutputStream> entry : activePlayers.entrySet()) {
             waitingPlayers.put(entry.getKey(), entry.getValue());
