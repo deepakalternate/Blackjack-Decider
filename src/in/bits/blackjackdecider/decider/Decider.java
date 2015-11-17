@@ -12,10 +12,11 @@ import java.util.logging.Logger;
 
 public class Decider extends Thread {
     
-    GameController gameController;
-    Server server;
-    HashMap<String, Integer> scores;
-    HashMap<String, Result> result;
+    private GameController gameController;
+    private Server server;
+    private HashMap<String, Integer> scores;
+    private HashMap<String, Result> result;
+    private Boolean ticker = true;
     
     public Decider(GameController gameController, Server server){
         this.gameController = gameController;
@@ -28,7 +29,9 @@ public class Decider extends Thread {
     }
     
     public void run(){
-        while (true) {
+        while (ticker) {
+            
+            System.out.println("Alive");
             
             try {
                 sleep(1000);
@@ -42,6 +45,8 @@ public class Decider extends Thread {
                 System.out.println(server.getActivePlayers());
                 declareWinner();
                 server.sendResult(result);
+                resetScoreboard();
+                ticker = false;
             }
         }
     }

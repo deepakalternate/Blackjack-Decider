@@ -49,6 +49,7 @@ public class Server implements ServerInterface{
         gameController = new GameController(this);
         timer = new Timer(this, gameController);
         decider = new Decider(gameController, this);
+        gameController.setDecider(decider);
 
         listen(port);
     }
@@ -163,9 +164,7 @@ public class Server implements ServerInterface{
         
         if (val == 1) {
             gameController.resetGameController();
-            decider.resetScoreboard();
             resetGameCounters();
-            //broadcast(new Message(null, null, Type.RESTART, null, 0, null));
         }
         
     }
@@ -344,7 +343,9 @@ public class Server implements ServerInterface{
     public void resetGameCounters(){
         count = 0;
         
-        Timer tock = new Timer(this, gameController);
+        timer = new Timer(this, gameController);
+        decider = new Decider(gameController, this);
+        gameController.setDecider(decider);
         lastJoin = System.currentTimeMillis();
         
         for (Map.Entry<Socket, ObjectOutputStream> entry : activePlayers.entrySet()) {

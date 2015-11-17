@@ -19,7 +19,7 @@ public class GameController {
         playing = new HashMap<>();
         folded = new HashMap<>();
         this.server = server;
-        decider = new Decider(this, server);
+        //decider = new Decider(this, server);
     }
     
     public void hit(Message message){
@@ -61,6 +61,10 @@ public class GameController {
     public void resetGameController(){
         playing.clear();
         folded.clear();
+    }
+    
+    public void setDecider(Decider decider){
+        this.decider = decider;
     }
     
 }
