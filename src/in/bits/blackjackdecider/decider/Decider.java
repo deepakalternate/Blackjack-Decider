@@ -41,7 +41,7 @@ public class Decider extends Thread {
             if (gameController.getNoOfPlayers() > 0 && scores.size() == gameController.getNoOfPlayers()){
                 System.out.println(server.getActivePlayers());
                 declareWinner();
-                server.sendResult();
+                server.sendResult(result);
             }
         }
     }
